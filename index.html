@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Найди своё призвание в добровольчестве</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    color: #333;
+  }
+  .container {
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    max-width: 700px;
+    width: 100%;
+    padding: 40px;
+    animation: fadeIn 0.5s ease;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  h1 {
+    font-size: 26px;
+    color: #4a3f8f;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  .subtitle {
+    text-align: center;
+    color: #888;
+    margin-bottom: 30px;
+    font-size: 15px;
+  }
+  .progress-bar {
+    height: 8px;
+    background: #eee;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 30px;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+    width: 0%;
+    transition: width 0.4s ease;
+    border-radius: 10px;
+  }
+  .question-counter {
+    text-align: center;
+    font-size: 13px;
+    color: #999;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .question-text {
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 25px;
+    line-height: 1.4;
+  }
+  .answers {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .answer-btn {
+    background: #f7f8fc;
+    border: 2px solid #e4e6f0;
+    border-radius: 12px;
+    padding: 16px 20px;
+    font-size: 16px;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #333;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .answer-btn:hover {
+    background: #eef0ff;
+    border-color: #667eea;
+    transform: translateX(5px);
+  }
+  .answer-btn:active { transform: scale(0.98); }
+  .answer-letter {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #fff;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .result { text-align: center; animation: fadeIn 0.6s ease; }
+  .result-icon { font-size: 70px; margin-bottom: 20px; }
+  .result-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #4a3f8f;
+    margin-bottom: 10px;
+  }
+  .result-direction {
+    font-size: 18px;
+    color: #667eea;
+    font-weight: 600;
+    margin-bottom: 20px;
+  }
+  .result-description {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #555;
+    margin-bottom: 20px;
+    text-align: left;
+    background: #f7f8fc;
+    padding: 20px;
+    border-radius: 12px;
+  }
+  .result-motto {
+    font-style: italic;
+    color: #764ba2;
+    font-size: 17px;
+    margin-bottom: 25px;
+    font-weight: 500;
+  }
+  .result-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 25px;
+  }
+  .tag {
+    background: #eef0ff;
+    color: #4a3f8f;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .input-group {
+    margin: 20px 0;
+    text-align: left;
+  }
+  .input-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #4a3f8f;
+    font-size: 14px;
+  }
+  .input-group input {
+    width: 100%;
+    padding: 13px 16px;
+    border: 2px solid #e4e6f0;
+    border-radius: 10px;
+    font-size: 15px;
+    font-family: inherit;
+    transition: border-color 0.2s ease;
+    outline: none;
+  }
+  .input-group input:focus {
+    border-color: #667eea;
+    background: #f9faff;
+  }
+  .btn {
+    border: none;
+    padding: 14px 40px;
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    font-family: inherit;
+    color: #fff;
+    margin: 5px;
+  }
+  .btn:hover { transform: translateY(-2px); }
+  .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+  .btn-send {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    box-shadow: 0 10px 25px rgba(40, 167, 69, 0.3);
+  }
+  .btn-send:hover { box-shadow: 0 10px 25px rgba(40, 167, 69, 0.5); }
+  .btn-restart {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+  }
+  .btn-restart:hover { box-shadow: 0 10px 25px rgba(102, 126, 234, 0.5); }
+  .send-status {
+    margin-top: 12px;
+    font-size: 14px;
+    min-height: 20px;
+    font-weight: 600;
+  }
+  .status-success { color: #28a745; }
+  .status-error { color: #dc3545; }
+  .status-loading { color: #667eea; }
+  .secondary-results {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #888;
+  }
+  @media (max-width: 600px) {
+    .container { padding: 25px 20px; }
+    h1 { font-size: 22px; }
+    .question-text { font-size: 17px; }
+    .answer-btn { font-size: 15px; padding: 14px 16px; }
+    .result-title { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+<div class="container" id="app"></div>
+
+<script>
+/* ============================================================
+   ⚙️ НАСТРОЙКА: ВСТАВЬ СВОЙ URL ИЗ GOOGLE APPS SCRIPT
+   ============================================================ */
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxlvWBDgpuivbOyC_acmPgr87JZjKNsyLt5qN7AGxbxJOqQiDeS02PeOx2hgn6yfrt9mw/exec';
+/* ============================================================ */
+
+const questions = [
+  { q: "Ты попадаешь на необитаемый остров с группой незнакомцев. Что ты делаешь первым делом?",
+    a: [
+      { text: "Организую всех и распределю задачи", type: "A" },
+      { text: "Начну успокаивать тех, кто паникует", type: "B" },
+      { text: "Пойду исследовать остров и искать ресурсы", type: "C" },
+      { text: "Начну мастерить укрытие и инструменты своими руками", type: "D" }
+    ]},
+  { q: "Какой формат выходного дня тебе ближе?",
+    a: [
+      { text: "Спортивный забег или поход", type: "A" },
+      { text: "Уютный вечер с друзьями и разговорами", type: "B" },
+      { text: "Поездка в новый город или музей", type: "C" },
+      { text: "Мастер-класс или создание чего-то своими руками", type: "D" }
+    ]},
+  { q: "Что для тебя самое ценное в работе?",
+    a: [
+      { text: "Видимый результат и достижение целей", type: "A" },
+      { text: "Благодарность и эмоции людей", type: "B" },
+      { text: "Новые знания и открытия", type: "C" },
+      { text: "Творческая свобода и самовыражение", type: "D" }
+    ]},
+  { q: "Друг просит помочь с переездом в субботу утром. Твоя реакция?",
+    a: [
+      { text: "«Конечно! Во сколько и что нести?»", type: "A" },
+      { text: "«Приду, но сначала приготовлю еду для всех»", type: "B" },
+      { text: "«Помогу, но давай сначала составим план»", type: "C" },
+      { text: "«Приду, если успею после своих дел»", type: "D" }
+    ]},
+  { q: "Какую суперспособность ты бы выбрал?",
+    a: [
+      { text: "Мгновенно перемещаться в любую точку мира", type: "A" },
+      { text: "Читать и лечить эмоции людей", type: "B" },
+      { text: "Понимать любой язык и знания", type: "C" },
+      { text: "Создавать любые предметы из воздуха", type: "D" }
+    ]},
+  { q: "В школьном проекте ты обычно…",
+    a: [
+      { text: "Лидер, который ведёт команду к результату", type: "A" },
+      { text: "Миротворец, который сглаживает конфликты", type: "B" },
+      { text: "Исследователь, который ищет информацию", type: "C" },
+      { text: "Креативщик, который придумывает идеи", type: "D" }
+    ]},
+  { q: "Что тебя больше всего трогает в новостях?",
+    a: [
+      { text: "Истории о спасённых жизнях и преодолении", type: "A" },
+      { text: "Истории о людях, которым нужна поддержка", type: "B" },
+      { text: "Истории об экологии и защите природы", type: "C" },
+      { text: "Истории о детях и их развитии", type: "D" }
+    ]},
+  { q: "Как ты обычно решаешь проблемы?",
+    a: [
+      { text: "Действую быстро и решительно", type: "A" },
+      { text: "Обсуждаю с близкими, ищу поддержку", type: "B" },
+      { text: "Анализирую, ищу информацию", type: "C" },
+      { text: "Пробую нестандартные подходы", type: "D" }
+    ]},
+  { q: "Идеальный вечер для тебя — это…",
+    a: [
+      { text: "Активная тренировка или пробежка", type: "A" },
+      { text: "Разговор по душам с близким человеком", type: "B" },
+      { text: "Чтение книги или просмотр документалки", type: "C" },
+      { text: "Рисование, музыка или рукоделие", type: "D" }
+    ]},
+  { q: "Что бы ты хотел сказать о себе через 10 лет?",
+    a: [
+      { text: "«Я изменил мир к лучшему»", type: "A" },
+      { text: "«Я помог многим людям»", type: "B" },
+      { text: "«Я много узнал и передал знания другим»", type: "C" },
+      { text: "«Я создал что-то важное и красивое»", type: "D" }
+    ]}
+];
+
+const results = {
+  A: { icon: "🚨", title: "Спасатель", direction: "Чрезвычайные ситуации / Поисково-спасательные отряды",
+    description: "Ты — человек действия. В критический момент ты берёшь ответственность на себя и ведёшь других за собой.",
+    motto: "«Действуй — и мир станет безопаснее»", tags: ["ЛизаАлерт", "Красный Крест", "МЧС-волонтёрство"] },
+  B: { icon: "💛", title: "Хранитель тепла", direction: "Социальное волонтёрство (помощь людям)",
+    description: "Ты — эмпат с большим сердцем. Ты умеешь слушать, поддерживать и дарить тепло.",
+    motto: "«Твоя забота — чья-то надежда»", tags: ["Старость в радость", "Ночлежка", "Больничные волонтёры"] },
+  C: { icon: "📚", title: "Просветитель", direction: "Образовательное и интеллектуальное волонтёрство",
+    description: "Ты — любознательный аналитик, который любит делиться знаниями.",
+    motto: "«Знание, отданное другому, — удваивается»", tags: ["Арифметика добра", "Старшие", "Digital-грамотность"] },
+  D: { icon: "🎨", title: "Творец", direction: "Культурное и экологическое волонтёрство",
+    description: "Ты — креативная натура, которая видит красоту там, где другие проходят мимо.",
+    motto: "«Твори — и мир станет красивее»", tags: ["Раздельный сбор", "Мосволонтёр", "Зелёная Россия"] },
+  AB: { icon: "🤝", title: "Наставник", direction: "Волонтёрство в детских домах и наставничество",
+    description: "Ты сочетаешь лидерство с большим сердцем.",
+    motto: "«Стань тем, кого не хватало тебе»", tags: ["Старшие братья, старшие сёстры", "Дети наши"] },
+  AC: { icon: "🎪", title: "Координатор", direction: "Event-волонтёрство (спортивные и городские события)",
+    description: "Ты — организатор и активист. Ты умеешь держать под контролем большие события.",
+    motto: "«Событие — это ты»", tags: ["Волонтёры Москвы", "Городские марафоны", "Форумы"] },
+  BC: { icon: "💬", title: "Медиатор", direction: "Психологическая помощь и кризисная поддержка",
+    description: "Ты — тёплый и внимательный слушатель.",
+    motto: "«Быть рядом — уже помощь»", tags: ["Детский телефон доверия", "Кризисные центры"] },
+  BD: { icon: "🎭", title: "Вдохновитель", direction: "Культура и искусство для людей",
+    description: "Ты — творческий и эмпатичный человек.",
+    motto: "«Искусство лечит души»", tags: ["Арт-терапия", "Подари жизнь", "Театр для особых детей"] },
+  CD: { icon: "🌍", title: "Эко-просветитель", direction: "Экологическое и научное волонтёрство",
+    description: "Ты — исследователь с творческим подходом.",
+    motto: "«Знай. Люби. Защищай»", tags: ["Гринпис", "РГО", "Заповедники"] },
+  AD: { icon: "🔧", title: "Инженер добра", direction: "Техническое и строительное волонтёрство",
+    description: "Ты — практик с золотыми руками.",
+    motto: "«Делай — и мир изменится»", tags: ["Том Сойер Фест", "IT-волонтёрство", "Добровольцы-строители"] }
+};
+
+let currentQuestion = 0;
+let scores = { A: 0, B: 0, C: 0, D: 0 };
+
+const app = document.getElementById('app');
+
+function renderQuestion() {
+  const q = questions[currentQuestion];
+  const progress = (currentQuestion / questions.length) * 100;
+
+  app.innerHTML = `
+    <h1>🎮 Найди своё призвание</h1>
+    <p class="subtitle">Игровой тест на профориентацию в добровольчестве</p>
+    <div class="progress-bar"><div class="progress-fill" style="width: ${progress}%"></div></div>
+    <div class="question-counter">Вопрос ${currentQuestion + 1} из ${questions.length}</div>
+    <div class="question-text">${q.q}</div>
+    <div class="answers">
+      ${q.a.map((ans, i) => `
+        <button class="answer-btn" onclick="selectAnswer('${ans.type}')">
+          <span class="answer-letter">${String.fromCharCode(65 + i)}</span>
+          <span>${ans.text}</span>
+        </button>
+      `).join('')}
+    </div>
+  `;
+}
+
+function selectAnswer(type) {
+  scores[type]++;
+  currentQuestion++;
+  if (currentQuestion < questions.length) {
+    renderQuestion();
+  } else {
+    showResult();
+  }
+}
+
+function getResultKey() {
+  const maxScore = Math.max(...Object.values(scores));
+  const topLetters = Object.keys(scores).filter(k => scores[k] === maxScore);
+  if (topLetters.length === 1) return topLetters[0];
+  const combo = topLetters.slice(0, 2).sort().join('');
+  return results[combo] ? combo : topLetters[0];
+}
+
+function showResult() {
+  const key = getResultKey();
+  const result = results[key] || results.A;
+
+  const sorted = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+  const secondary = sorted.slice(1).filter(([_, v]) => v > 0);
+
+  app.innerHTML = `
+    <div class="result">
+      <div class="result-icon">${result.icon}</div>
+      <div class="result-title">Ты — ${result.title}!</div>
+      <div class="result-direction">${result.direction}</div>
+      <div class="result-description">${result.description}</div>
+      <div class="result-motto">${result.motto}</div>
+      <div class="result-tags">
+        ${result.tags.map(t => `<span class="tag">${t}</span>`).join('')}
+      </div>
+
+      <div class="input-group">
+        <label>👤 Твоё имя и фамилия:</label>
+        <input type="text" id="studentName" placeholder="Например: Иванов Иван" autocomplete="off">
+      </div>
+      <div class="input-group">
+        <label>🎓 Группа / класс:</label>
+        <input type="text" id="studentGroup" placeholder="Например: ИС-21" autocomplete="off">
+      </div>
+
+      <button class="btn btn-send" id="sendBtn" onclick="sendResultToGoogle()">
+        📤 Отправить результат преподавателю
+      </button>
+      <div class="send-status" id="sendStatus"></div>
+
+      <button class="btn btn-restart" onclick="restart()">🔄 Пройти заново</button>
+
+      <div class="secondary-results">
+        Твои дополнительные склонности: ${secondary.map(([k, v]) => `${results[k]?.title || k} (${v})`).join(', ')}
+      </div>
+    </div>
+  `;
+
+  // Сохраняем результат глобально, чтобы использовать при отправке
+  window.__currentResult = {
+    title: result.title,
+    direction: result.direction,
+    scores: { ...scores }
+  };
+}
+
+function sendResultToGoogle() {
+  const nameInput = document.getElementById('studentName');
+  const groupInput = document.getElementById('studentGroup');
+  const statusEl = document.getElementById('sendStatus');
+  const sendBtn = document.getElementById('sendBtn');
+
+  const name = nameInput.value.trim();
+  const group = groupInput.value.trim();
+
+  // Валидация
+  if (!name) {
+    statusEl.className = 'send-status status-error';
+    statusEl.textContent = '⚠️ Пожалуйста, введи своё имя';
+    nameInput.focus();
+    return;
+  }
+
+  if (SCRIPT_URL.includes('ТВОЙ_ID')) {
+    statusEl.className = 'send-status status-error';
+    statusEl.textContent = '⚠️ URL скрипта не настроен. Обратись к преподавателю.';
+    return;
+  }
+
+  const result = window.__currentResult;
+
+  statusEl.className = 'send-status status-loading';
+  statusEl.textContent = '⏳ Отправляем...';
+  sendBtn.disabled = true;
+
+  const formData = new FormData();
+  formData.append('name', name);
+  formData.append('group', group);
+  formData.append('resultTitle', result.title);
+  formData.append('resultDirection', result.direction);
+  formData.append('scores', JSON.stringify(result.scores));
+
+  fetch(SCRIPT_URL, {
+    method: 'POST',
+    body: formData,
+    mode: 'no-cors' // обходим CORS для Google Apps Script
+  })
+  .then(() => {
+    statusEl.className = 'send-status status-success';
+    statusEl.textContent = '✅ Результат успешно отправлен!';
+    sendBtn.textContent = '✅ Отправлено';
+    // Блокируем поля после отправки
+    nameInput.disabled = true;
+    groupInput.disabled = true;
+  })
+  .catch((error) => {
+    console.error('Ошибка:', error);
+    statusEl.className = 'send-status status-error';
+    statusEl.textContent = '❌ Ошибка отправки. Проверь интернет или попробуй ещё раз.';
+    sendBtn.disabled = false;
+  });
+}
+
+function restart() {
+  currentQuestion = 0;
+  scores = { A: 0, B: 0, C: 0, D: 0 };
+  window.__currentResult = null;
+  renderQuestion();
+}
+
+// Запуск
+renderQuestion();
+</script>
+</body>
+</html>
